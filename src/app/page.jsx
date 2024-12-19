@@ -8,46 +8,24 @@ export default function Home() {
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     clickCost: "",
-    clicksCount: 1000,
+    // clicksCount: 1000,
     k2rRate: "",
     r2dRate: "",
   });
+  const clicksCount = 1000
 
   const [results, setResults] = useState(null);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    let updatedValue = value;
-
-    if (name === "k2rRate" || name === "r2dRate") {
-      if (value === "" || isNaN(value)) {
-        updatedValue = "";
-        setErrors((prev) => ({ ...prev, [name]: "Введите число" }));
-      } else if (value < 0 || value > 100) {
-        updatedValue = Math.min(100, Math.max(0, parseFloat(value)));
-        setErrors((prev) => ({
-          ...prev,
-          [name]: "Введите значение от 0 до 100",
-        }));
-      } else {
-        setErrors((prev) => ({ ...prev, [name]: null }));
-      }
-    }
-
-    setFormData((prev) => ({ ...prev, [name]: updatedValue }));
-  };
   // const handleChange = (e) => {
   //   const { name, value } = e.target;
   //   let updatedValue = value;
 
-  //   // Замена запятой на точку для дробных чисел
   //   if (name === "k2rRate" || name === "r2dRate") {
-  //     updatedValue = updatedValue.replace(",", ".");
-
-  //     // Проверка, что введенное значение является числом и не содержит букв
-  //     if (updatedValue === "" || isNaN(updatedValue) || /[a-zA-Z]/.test(updatedValue)) {
-  //       setErrors((prev) => ({ ...prev, [name]: "Введите корректное число" }));
-  //     } else if (updatedValue < 0 || updatedValue > 100) {
+  //     if (value === "" || isNaN(value)) {
+  //       updatedValue = "";
+  //       setErrors((prev) => ({ ...prev, [name]: "Введите число" }));
+  //     } else if (value < 0 || value > 100) {
+  //       updatedValue = Math.min(100, Math.max(0, parseFloat(value)));
   //       setErrors((prev) => ({
   //         ...prev,
   //         [name]: "Введите значение от 0 до 100",
@@ -60,9 +38,45 @@ export default function Home() {
   //   setFormData((prev) => ({ ...prev, [name]: updatedValue }));
   // };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    let updatedValue = value;
+
+    if (name === "clickCost") {
+      if (!/^\d*\.?\d*$/.test(updatedValue)) {
+        updatedValue = updatedValue.slice(0, -1); // Убираем последний символ
+      }
+    }
+
+    // Разрешаем только цифры, запятую и точку
+    if (name === "k2rRate" || name === "r2dRate") {
+      // Заменяем запятую на точку для дробных чисел
+      updatedValue = updatedValue.replace(",", ".");
+
+      // Фильтруем всё, что не цифры, не точка и не запятая
+      if (!/^\d*\.?\d*$/.test(updatedValue)) {
+        updatedValue = updatedValue.slice(0, -1); // Убираем последний символ
+      }
+
+      // Проверка на пустое значение или невалидное число
+      if (updatedValue === "" || isNaN(updatedValue)) {
+        setErrors((prev) => ({ ...prev, [name]: "Введите корректное число" }));
+      } else if (updatedValue < 0 || updatedValue > 100) {
+        setErrors((prev) => ({
+          ...prev,
+          [name]: "Введите значение от 0 до 100",
+        }));
+      } else {
+        setErrors((prev) => ({ ...prev, [name]: null }));
+      }
+    }
+
+    setFormData((prev) => ({ ...prev, [name]: updatedValue }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { clickCost, clicksCount, k2rRate, r2dRate } = formData;
+    const { clickCost,  k2rRate, r2dRate } = formData;
 
     const costPerClick = parseFloat(clickCost);
     const totalClicks = parseInt(clicksCount);
@@ -101,8 +115,6 @@ export default function Home() {
             key={field.name}
             name={field.name}
             formData={formData}
-            min={field.min}
-            max={field.max}
             handleChange={handleChange}
             errors={errors}
             label={field.label}

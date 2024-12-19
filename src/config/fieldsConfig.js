@@ -1,10 +1,10 @@
 export const fieldsConfig = [
+  // { name: "clicksCount", label: "Число кликов", hint: "Введите число кликов" },
   {
     name: "clickCost",
     label: "Стоимость клика ($)",
     hint: "Введите стоимость клика",
   },
-  { name: "clicksCount", label: "Число кликов", hint: "Введите число кликов" },
   {
     name: "k2rRate",
     label: "Конверт к2р (%)",

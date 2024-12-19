@@ -7,8 +7,6 @@ const InputGroup = ({
   formData,
   handleChange,
   errors,
-  min,
-  max,
   label,
   hint,
 }) => {
@@ -24,8 +22,7 @@ const InputGroup = ({
       <input
         type={"text"}
         id={name}
-        min={min}
-        max={max}
+        inputMode="decimal"
         name={name}
         value={formData[name]}
         onChange={handleChange}
